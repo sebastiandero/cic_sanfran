@@ -57,25 +57,5 @@ public class MovieProviderImpl implements MovieProvider {
             log.info("Something went wrong parsing the dataSet: ", e);
             return Collections.emptyList();
         }
-        /*
-
-        try (FileInputStream fis = new FileInputStream(dataSet)) {
-            XMLInputFactory xmlInFact = XMLInputFactory.newInstance();
-            XMLStreamReader reader = xmlInFact.createXMLStreamReader(fis);
-
-            List<Movie> movies = new ArrayList<>();
-
-            while (reader.hasNext()) {
-                reader.next();
-                log.info(reader.getElementText());
-                Movie.parseFromXMLFiltered(reader, title, beforeYear).ifPresent(movies::add);
-            }
-
-            return movies;
-        } catch (IOException | XMLStreamException e) {
-            log.info("Something went wrong parsing the XML: ", e);
-            return Collections.emptyList();
-        }
-        */
     }
 }
