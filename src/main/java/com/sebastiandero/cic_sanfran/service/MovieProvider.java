@@ -8,6 +8,8 @@ import java.util.List;
 @Component
 public interface MovieProvider {
     List<Movie> getMovies();
+
     List<Movie> getMovies(String title);
+
     List<Movie> getMovies(String title, int beforeYear);
 }

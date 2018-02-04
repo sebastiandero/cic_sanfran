@@ -10,13 +10,13 @@ import java.util.List;
 
 public class MovieSAXHandler extends DefaultHandler {
 
-    private List<Movie>        movies;
+    private List<Movie> movies;
     private Movie.MovieBuilder builder;
-    String filterTitle;
-    int    filterBeforeYear;
+    private String filterTitle;
+    private int filterBeforeYear;
 
-    String currentValue;
-    boolean isFilteredOut = false;
+    private String currentValue;
+    private boolean isFilteredOut = false;
 
     public MovieSAXHandler(String filterTitle, int filterBeforeYear) {
         this.filterTitle = filterTitle;
@@ -29,6 +29,7 @@ public class MovieSAXHandler extends DefaultHandler {
 
         if (elementName.equalsIgnoreCase("row")) {
             builder = Movie.builder();
+            isFilteredOut = false;
         }
     }
 
@@ -36,7 +37,7 @@ public class MovieSAXHandler extends DefaultHandler {
         try {
             return Integer.parseInt(string);
         } catch (NumberFormatException ignored) {
-            return - 1;
+            return -1;
         }
     }
 
@@ -44,10 +45,12 @@ public class MovieSAXHandler extends DefaultHandler {
     public void endElement(String s, String s1, String element) {
         // if end of book element add to list
         if (element.equals("row")) {
-            movies.add(builder.build());
+            if (!isFilteredOut) {
+                movies.add(builder.build());
+            }
         }
         if (element.equalsIgnoreCase("title")) {
-            if (!(currentValue.contains(filterTitle) || isFilteredOut)) {
+            if (filterTitle != null && !currentValue.contains(filterTitle)) {
                 isFilteredOut = true;
             }
             builder.title(currentValue);
@@ -56,7 +59,14 @@ public class MovieSAXHandler extends DefaultHandler {
             builder.locations(currentValue);
         }
         if (element.equalsIgnoreCase("release_year")) {
-            builder.releaseYear(getNumericFromString(currentValue));
+
+            int parsedYear = getNumericFromString(currentValue);
+
+            if (filterBeforeYear != -1 && parsedYear < filterBeforeYear) {
+                isFilteredOut = true;
+            }
+
+            builder.releaseYear(parsedYear);
         }
     }
 

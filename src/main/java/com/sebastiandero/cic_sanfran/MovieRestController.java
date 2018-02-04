@@ -26,7 +26,7 @@ public class MovieRestController {
 
         log.info("Request received: with these parameters: title:" + title + " beforeYear:" + beforeYearString);
 
-        int beforeYear = parseIfNumeric(beforeYearString).orElse(- 1);
+        int beforeYear = parseIfNumeric(beforeYearString).orElse(-1);
 
         return movieProvider.getMovies(title, beforeYear);
     }
