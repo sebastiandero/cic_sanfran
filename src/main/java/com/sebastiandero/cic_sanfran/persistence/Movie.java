@@ -8,6 +8,5 @@ import lombok.Data;
 public class Movie {
 
     private String title;
-    private int releaseYear;
     private String locations;
 }

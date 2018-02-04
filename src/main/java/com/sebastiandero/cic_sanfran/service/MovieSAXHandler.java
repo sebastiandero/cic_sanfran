@@ -2,25 +2,27 @@ package com.sebastiandero.cic_sanfran.service;
 
 
 import com.sebastiandero.cic_sanfran.persistence.Movie;
+import lombok.extern.slf4j.Slf4j;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class MovieSAXHandler extends DefaultHandler {
 
     private List<Movie> movies;
     private Movie.MovieBuilder builder;
     private String filterTitle;
-    private int filterBeforeYear;
+    private String filterLocations;
 
     private String currentValue;
     private boolean isFilteredOut = false;
 
-    public MovieSAXHandler(String filterTitle, int filterBeforeYear) {
+    public MovieSAXHandler(String filterTitle, String locations) {
         this.filterTitle = filterTitle;
-        this.filterBeforeYear = filterBeforeYear;
+        this.filterLocations = locations;
         movies = new ArrayList<>();
     }
 
@@ -33,20 +35,16 @@ public class MovieSAXHandler extends DefaultHandler {
         }
     }
 
-    private int getNumericFromString(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException ignored) {
-            return -1;
-        }
-    }
-
     @Override
     public void endElement(String s, String s1, String element) {
         // if end of book element add to list
         if (element.equals("row")) {
             if (!isFilteredOut) {
-                movies.add(builder.build());
+                Movie movie = builder.build();
+
+                if ((filterTitle == null || movie.getTitle() != null) && (filterLocations == null || movie.getLocations() != null)) {
+                    movies.add(movie);
+                }
             }
         }
         if (element.equalsIgnoreCase("title")) {
@@ -56,17 +54,10 @@ public class MovieSAXHandler extends DefaultHandler {
             builder.title(currentValue);
         }
         if (element.equalsIgnoreCase("locations")) {
-            builder.locations(currentValue);
-        }
-        if (element.equalsIgnoreCase("release_year")) {
-
-            int parsedYear = getNumericFromString(currentValue);
-
-            if (filterBeforeYear != -1 && parsedYear < filterBeforeYear) {
+            if (filterLocations != null && !currentValue.contains(filterLocations)) {
                 isFilteredOut = true;
             }
-
-            builder.releaseYear(parsedYear);
+            builder.locations(currentValue);
         }
     }
 

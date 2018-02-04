@@ -4,13 +4,13 @@ import com.sebastiandero.cic_sanfran.persistence.Movie;
 import com.sebastiandero.cic_sanfran.service.MovieProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/movies")
@@ -21,24 +21,27 @@ public class MovieRestController {
     private MovieProvider movieProvider;
 
     @GetMapping
-    List<Movie> getAllMovies(@RequestParam(name = "title", defaultValue = "") String title,
-                             @RequestParam(name = "beforeYear", defaultValue = "") String beforeYearString) {
+    List<Movie> getAllMovies(@RequestParam(name = "title", required = false) String title,
+                             @RequestParam(name = "locations", required = false) String locations) {
 
-        log.info("Request received: with these parameters: title:" + title + " beforeYear:" + beforeYearString);
+        log.info("Request received: with these parameters: title:" + title + " locations:" + locations);
 
-        int beforeYear = parseIfNumeric(beforeYearString).orElse(-1);
-
-        return movieProvider.getMovies(title, beforeYear);
+        return movieProvider.getMovies(title, locations);
     }
 
-    private Optional<Integer> parseIfNumeric(String beforeYear) {
-        Integer parsed = null;
-
-        try {
-            parsed = Integer.parseInt(beforeYear);
-        } catch (NumberFormatException ignored) {
+    @PostMapping
+    void addMovie(@RequestParam(name = "title") String title, @RequestParam(name = "locations") String locations) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new InvalidRequestParamException();
+        }
+        if (locations == null || locations.trim().isEmpty()) {
+            throw new InvalidRequestParamException();
         }
 
-        return Optional.ofNullable(parsed);
+        try {
+            movieProvider.createMovie(title, locations);
+        } catch (ParserConfigurationException | IOException | TransformerException | SAXException e) {
+            log.info("Something went wrong: ", e);
+        }
     }
 }
