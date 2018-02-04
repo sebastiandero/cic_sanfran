@@ -28,7 +28,7 @@ public class MovieRestController {
 
         int beforeYear = parseIfNumeric(beforeYearString).orElse(- 1);
 
-        return movieProvider.getMovie(title, beforeYear);
+        return movieProvider.getMovies(title, beforeYear);
     }
 
     private Optional<Integer> parseIfNumeric(String beforeYear) {

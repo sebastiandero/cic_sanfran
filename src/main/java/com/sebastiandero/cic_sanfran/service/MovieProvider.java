@@ -7,7 +7,7 @@ import java.util.List;
 
 @Component
 public interface MovieProvider {
-    List<Movie> getMovie();
-    List<Movie> getMovie(String title);
-    List<Movie> getMovie(String title, int beforeYear);
+    List<Movie> getMovies();
+    List<Movie> getMovies(String title);
+    List<Movie> getMovies(String title, int beforeYear);
 }
