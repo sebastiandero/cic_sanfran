@@ -10,6 +10,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class MovieProviderImpl implements MovieProvider {
 
     @Override
     public List<Movie> getMovie() {
-        return Collections.singletonList(new Movie());
+        return parse();
     }
 
     @Override
@@ -34,15 +35,28 @@ public class MovieProviderImpl implements MovieProvider {
         return Collections.singletonList(new Movie());
     }
 
+
     private List<Movie> parse() {
+        return parse(null, - 1);
+    }
+
+
+    private List<Movie> parse(String title, int beforeYear) {
+
         try (FileInputStream fis = new FileInputStream(dataSet)) {
             XMLInputFactory xmlInFact = XMLInputFactory.newInstance();
             XMLStreamReader reader = xmlInFact.createXMLStreamReader(fis);
 
+            List<Movie> movies = new ArrayList<>();
 
             while (reader.hasNext()) {
-                reader.next(); // do something here
+                reader.next();
+
+                Movie.parseFromXMLFiltered(reader, title, beforeYear);
+                movies.add(Movie.parseFromXML(reader));
             }
+
+            return movies;
         } catch (IOException | XMLStreamException e) {
             log.info("Something went wrong parsing the XML: ", e);
             return Collections.emptyList();
