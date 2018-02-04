@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CicSanfranApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CicSanfranApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CicSanfranApplication.class, args);
+    }
 }
