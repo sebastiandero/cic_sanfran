@@ -23,9 +23,11 @@ import java.util.List;
 @Slf4j
 public class MovieProviderImpl implements MovieProvider {
 
+    private static String DATASET_PATH = "sanfran_movies_dataset.xml";
+
     private SAXParserFactory factory = SAXParserFactory.newInstance();
 
-    private File dataSet = new File(getClass().getResource("/sanfran_movies_dataset.xml").getPath());
+    private File dataSet = new File(DATASET_PATH);
 
     @Override
     public List<Movie> getMovies() {
