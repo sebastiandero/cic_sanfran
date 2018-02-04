@@ -15,5 +15,5 @@ public interface MovieProvider {
 
     List<Movie> getMovies(String title, String locations);
 
-    void createMovie(String title, String locations) throws ParserConfigurationException, IOException, SAXException, TransformerException;
+    void createMovie(Movie movie) throws ParserConfigurationException, IOException, SAXException, TransformerException;
 }

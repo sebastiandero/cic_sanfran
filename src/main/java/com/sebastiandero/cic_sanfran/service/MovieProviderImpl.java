@@ -38,7 +38,7 @@ public class MovieProviderImpl implements MovieProvider {
     }
 
     @Override
-    public void createMovie(String title, String locations) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+    public void createMovie(Movie movie) throws ParserConfigurationException, IOException, SAXException, TransformerException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.parse(dataSet);
@@ -47,10 +47,10 @@ public class MovieProviderImpl implements MovieProvider {
         Element newRowElement = doc.createElement("row");
 
         Element titleElement = doc.createElement("title");
-        titleElement.setTextContent(title);
+        titleElement.setTextContent(movie.getTitle());
 
         Element locationsElement = doc.createElement("locations");
-        locationsElement.setTextContent(locations);
+        locationsElement.setTextContent(movie.getLocations());
 
         newRowElement.appendChild(titleElement);
         newRowElement.appendChild(locationsElement);

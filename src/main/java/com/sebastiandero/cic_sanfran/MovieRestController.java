@@ -30,16 +30,16 @@ public class MovieRestController {
     }
 
     @PostMapping
-    void addMovie(@RequestParam(name = "title") String title, @RequestParam(name = "locations") String locations) {
-        if (title == null || title.trim().isEmpty()) {
+    void addMovie(@RequestBody Movie movie) {
+        if (movie.getTitle()== null || movie.getTitle().trim().isEmpty()) {
             throw new InvalidRequestParamException();
         }
-        if (locations == null || locations.trim().isEmpty()) {
+        if (movie.getLocations() == null || movie.getLocations().trim().isEmpty()) {
             throw new InvalidRequestParamException();
         }
 
         try {
-            movieProvider.createMovie(title, locations);
+            movieProvider.createMovie(movie);
         } catch (ParserConfigurationException | IOException | TransformerException | SAXException e) {
             log.info("Something went wrong: ", e);
         }
