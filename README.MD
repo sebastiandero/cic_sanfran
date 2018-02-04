@@ -12,14 +12,23 @@ http://<host>:<port>/movies
 
 supported methods:
 
-- GET
+- GET, POST
 
 supported query parameters:
 
 - title: String
   - filters by title, can be part of the title too.
-- beforeYear: integer
-  - filters movies to movies before the specified year.
+- locations: String
+  - filters movies by shooting location, can be part of the title too.
+
+supported body:
+
+```curl
+{
+    "title": "<title>",
+    "locations": "<locations>"
+}
+```
 
 Returns a json array.
 
@@ -29,8 +38,7 @@ example query:
 GET http://localhost:8080/movies?title=180
 ```
 
+
 # !!
 Automated Testing was not done as this program is quite small(270 lines of code, none of which can be sensibly unit tested).
 If this is a requirement(says optional on the webpage) of course I can add it, just let me know.
-
-hvEULeH=xajK7vaMsMN6C77ghONWQ6HH
